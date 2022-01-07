@@ -2,13 +2,18 @@ import tkinter as t
 
 class ennemies :
 
-    def __init__(self, window, frameRate, borderPadding, speed):
-        self.listAliens = []
+    def __init__(self, window, frameRate, borderPadding, speed, yOffset):
+
+        self.window = window
+
         self.delta = 1/float(frameRate) * 1000
         self.borderPadding = borderPadding
         self.speed = speed
-        self.window = window
+
         self.down = False
+        self.yOffset = yOffset
+
+        self.listAliens = []
     
     def addAlien(self, alien):
         self.listAliens.append(alien)
@@ -63,7 +68,7 @@ class alien(instance):
             self.group.changeDir()
     
     def goDown(self):
-        self.canevas.move(self.image, 0, 30)
+        self.canevas.move(self.image, 0, self.group.yOffset)
 
         
 

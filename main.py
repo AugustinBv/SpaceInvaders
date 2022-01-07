@@ -15,6 +15,7 @@ alienPadding = 10
 alienSpeed = 3
 alienSize = 15
 alienHealth = 1
+yAlienDeplacement = 10
 
 #Création de la fenêtre
 si = t.Tk()
@@ -53,7 +54,7 @@ buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 #screen.create_oval(50,50,70,70,outline='red',fill='red')
 
-ennemies = interract.ennemies(si, framerate, borderPadding, alienSpeed)
+ennemies = interract.ennemies(si, framerate, borderPadding, alienSpeed, yAlienDeplacement)
 
 nAlien = 56
 counter = 0
