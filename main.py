@@ -6,6 +6,7 @@ import interract
 
 #Création de la fenêtre
 si = t.Tk()
+
 si.title('Space Invaders')
 si["bg"]="grey"
 largeur, hauteur = 800, 600
@@ -25,7 +26,12 @@ buttonQuit.pack(side = RIGHT, padx = 5, pady = 5)
 buttonMenu = t.Button(si, text = "Menu", fg = "red")
 buttonMenu.pack(side = RIGHT, padx = 5, pady = 5)
 
-alien1 = interract.alien(0,1,10,10)
+#screen.create_oval(50,50,70,70,outline='red',fill='red')
+
+alien1 = interract.alien(screen,[50,50],10,10,10)
+pos = alien1.position
+screen.create_oval(pos[0],pos[1],pos[0]+alien1.size,pos[1]+alien1.size, fill='red')
+alien1.move()
 
 
 si.mainloop()
