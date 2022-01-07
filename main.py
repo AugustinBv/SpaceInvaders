@@ -25,7 +25,7 @@ lab.grid(row= 0, column=0, padx= 5, pady= 5)
 #Widget fenetre de jeu
 screen = t.Canvas(leftFrame, width = largeur, height = hauteur, bg = 'black')
 screen.grid(row= 1, column=0, padx= 5, pady= 5)
-
+screen.focus_set()
 
 #widget bouton start
 startMenu = t.Button(rightFrame, text = "Start", fg = "red")
@@ -44,6 +44,10 @@ buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 alien1 = interract.alien(si,screen,[50,50],10,1,10)
 alien2 = interract.alien(si,screen,[70,50],10,1,10)
+itsMeMario = interract.player(si,screen,[400,550],20,5,50)
+screen.bind('<Right>', itsMeMario.bougeSTP)
+screen.bind('<Left>', itsMeMario.bougeSTP)
+screen.bind('<Key>', itsMeMario.keys)
 
 alien1.applySpeed()
 alien2.applySpeed()
