@@ -12,9 +12,9 @@ si["bg"]="grey"
 largeur, hauteur = 800, 600
 
 #Separation de la fenetre
-leftFrame = t.Frame()
+leftFrame = t.Frame(si)
 leftFrame.grid(row = 0,column=0)
-rightFrame = t.Frame()
+rightFrame = t.Frame(si)
 rightFrame.grid(row = 0, column=1)
 
 #Widget label de score
@@ -41,10 +41,12 @@ buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 #screen.create_oval(50,50,70,70,outline='red',fill='red')
 
-alien1 = interract.alien(screen,[50,50],10,10,10)
-pos = alien1.position
-screen.create_oval(pos[0],pos[1],pos[0]+alien1.size,pos[1]+alien1.size, fill='red')
-alien1.move()
+
+alien1 = interract.alien(si,screen,[50,50],10,1,10)
+alien2 = interract.alien(si,screen,[70,50],10,1,10)
+
+alien1.applySpeed()
+alien2.applySpeed()
 
 
 si.mainloop()
