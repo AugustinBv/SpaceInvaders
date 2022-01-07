@@ -89,8 +89,9 @@ class alien(instance):
         
 
 class player(instance):
-    def __init__(self, window, canevas, position, size, speed, health):
-        super().__init__(window, canevas, position, size, speed, health)
+    def __init__(self, canevas, position, size, speed, health):
+        super().__init__(canevas, position, size, health)
+        self.speed = speed
         self.cheat = [0,0,0,0,0,0,0,0]
         self.attackSpeed = 30
         self.attackRange = 5

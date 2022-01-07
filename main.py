@@ -70,9 +70,7 @@ while counter < nAlien:
     xOffset += alienPadding + alienSize
     counter += 1
 
-alien1 = interract.alien(si,screen,[50,50],10,1,10)
-alien2 = interract.alien(si,screen,[70,50],10,1,10)
-itsMeMario = interract.player(si,screen,[400,550],20,5,50)
+itsMeMario = interract.player(screen,[400,550],20,5,50)
 screen.bind('<Right>', itsMeMario.bougeSTP)
 screen.bind('<Left>', itsMeMario.bougeSTP)
 screen.bind('<Key>', itsMeMario.keys)
