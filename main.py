@@ -4,6 +4,16 @@ from random import randint
 import interract
 
 
+# Constantes
+
+framerate = 30
+borderPadding = 5
+spawnPadding = 50
+alienPadding = 20
+alienSpeed = 2
+alienSize = 15
+alienHealth = 1
+
 #Création de la fenêtre
 si = t.Tk()
 
@@ -41,12 +51,24 @@ buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 #screen.create_oval(50,50,70,70,outline='red',fill='red')
 
+ennemies = interract.ennemies(si, framerate, borderPadding, alienSpeed)
 
-alien1 = interract.alien(si,screen,[50,50],10,1,10)
-alien2 = interract.alien(si,screen,[70,50],10,1,10)
+nAlien = 350
+counter = 0
+xOffset = spawnPadding
+yOffset = 20
 
-alien1.applySpeed()
-alien2.applySpeed()
+while counter < nAlien:
+
+    if( xOffset + alienPadding > 800 - spawnPadding):
+        xOffset = spawnPadding
+        yOffset += 20
+    alien1 = interract.alien(screen,[xOffset,yOffset],alienSize,alienHealth,ennemies)
+    xOffset += alienPadding
+    counter += 1
+
+
+ennemies.moveAliens()
 
 
 si.mainloop()
