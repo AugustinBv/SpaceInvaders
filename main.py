@@ -7,10 +7,12 @@ import interract
 # Constantes
 
 framerate = 30
+
 borderPadding = 5
 spawnPadding = 50
-alienPadding = 20
-alienSpeed = 2
+alienPadding = 10
+
+alienSpeed = 3
 alienSize = 15
 alienHealth = 1
 
@@ -53,18 +55,18 @@ buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 ennemies = interract.ennemies(si, framerate, borderPadding, alienSpeed)
 
-nAlien = 350
+nAlien = 56
 counter = 0
 xOffset = spawnPadding
 yOffset = 20
 
 while counter < nAlien:
 
-    if( xOffset + alienPadding > 800 - spawnPadding):
+    if( xOffset + alienPadding + alienSize > 800 - spawnPadding):
         xOffset = spawnPadding
         yOffset += 20
     alien1 = interract.alien(screen,[xOffset,yOffset],alienSize,alienHealth,ennemies)
-    xOffset += alienPadding
+    xOffset += alienPadding + alienSize
     counter += 1
 
 
