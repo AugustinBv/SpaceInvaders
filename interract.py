@@ -1,5 +1,20 @@
 import tkinter as t
 
+
+def checkForCollision(coordsA, coordsB):
+    
+    colliding = False
+
+    if (coordsA[2] >= coordsB[0] and 
+        coordsA[0] <= coordsB[2] and 
+        coordsA[3] >= coordsB[1] and 
+        coordsA[1] <= coordsB[3] ):
+
+        colliding = True
+    return colliding
+
+    
+
 class ennemies :
 
     def __init__(self, window, frameRate, borderPadding, speed, yOffset):
@@ -69,6 +84,7 @@ class alien(instance):
     
     def goDown(self):
         self.canevas.move(self.image, 0, self.group.yOffset)
+
 
         
 
