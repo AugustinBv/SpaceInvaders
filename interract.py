@@ -42,14 +42,14 @@ class entities :
             self.down = True
     
     def moveLaser(self):
-        for laser in self.listEntities[3]:
+        for laser in self.entitiesCodex["laser"]:
             laser.laserShot()
         self.window.after(int(self.delta), self.moveLaser())
     
     def moveAliens(self):
-        for alien in self.entitiesCodex[1]:
+        for alien in self.entitiesCodex["alien"]:
             alien.checkForBorders()
-        for alien in self.entitiesCodex[1]:
+        for alien in self.entitiesCodex["alien"]:
             if(self.down):
                 alien.goDown()
             alien.applySpeed()
@@ -57,7 +57,7 @@ class entities :
         self.window.after(int(self.delta), self.moveAliens)
 
     def clear(self):
-        self.entitiesCodex[1][0].canevas.delete('all')
+        self.entitiesCodex["alien"][0].canevas.delete('all')
             
             
 
@@ -79,7 +79,7 @@ class instance:
     def removeHP(self, value):
         self.health -= value
         if self.health<=0 :
-            self.entities.entitiesCodex[1].remove(self)
+            self.entities.entitiesCodex[self.type].remove(self)
             self.destroy()
     
 class alien(instance):
@@ -160,7 +160,7 @@ class player(instance):
 
     
     def checkForCollisionWithAliens(self):
-        for alien in self.entities.entitiesCodex[1]:
+        for alien in self.entities.entitiesCodex["alien"]:
             if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
                 self.entities.clear()
         self.entities.window.after(int(self.entities.delta), self.checkForCollisionWithAliens)
@@ -180,9 +180,9 @@ class laser(instance):
             self.entities[3].remove(self)
             self.destroy()
         if self.direction == 1 :
-            for alien in self.entities.entitiesCodex[1] :
+            for alien in self.entities.entitiesCodex["alien"] :
                 if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
-                    self.entities.entitiesCodex[3].remove(self)
+                    self.entities.entitiesCodex[self.type].remove(self)
                     alien.removeHP(self.health)
                     break
         for typeEntities in self.entities :
