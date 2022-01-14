@@ -44,7 +44,7 @@ class entities :
     def moveLaser(self):
         for laser in self.entitiesCodex["laser"]:
             laser.laserShot()
-        self.window.after(int(self.delta), self.moveLaser())
+        self.window.after(int(self.delta), self.moveLaser)
     
     def moveAliens(self):
         for alien in self.entitiesCodex["alien"]:
@@ -177,14 +177,15 @@ class player(instance):
         
 class laser(instance):
     def __init__(self, canevas, position, direction, entities, type, size = 5, speed = 10, health = 1) :
-        super().__init__(canevas, position, size, speed, health, entities,type)
+        super().__init__(canevas, position, size, health, entities,type)
+        self.speed = speed
         self.direction = direction
         
     def getPos(self):
         return self.canevas.coords(self.image)[:1]
         
     def laserShot(self):
-        moveY = self.speed*self.direction
+        moveY = -self.speed*self.direction
         newY = self.getPos()[0] + moveY
         if self.entities.borderPadding > newY or newY > (self.canevas.winfo_height() - self.entities.borderPadding - self.size) :
             self.entities[3].remove(self)
@@ -198,7 +199,7 @@ class laser(instance):
         else :
             for typeEntities in self.entities.entitiesCodex["player"] + self.entities.entitiesCodex["wall"] :
                 for entity in typeEntities :
-                    if(checkForCollision(self.canevas.coords(self.image), self.canevas.coordes(entity.image))):
+                    if(checkForCollision(self.canevas.coords(self.image), self.canevas.coords(entity.image))):
                         self.entities.entitiesCodex[self.type].remove(self)
                         entity.removeHP(self.health)
         self.canevas.move(self.image, 0, moveY)
