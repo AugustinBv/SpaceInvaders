@@ -37,7 +37,11 @@ class entities :
         self.speed *= -1
         if(self.speed > 0):
             self.down = True
+    
+    def moveLaser(self):
+        for laser in self.listEntities[3]:
             
+        self.window.after(int(self.delta), self.moveLaser())
     
     def moveAliens(self):
         for alien in self.listEntities[1]:
@@ -65,7 +69,12 @@ class instance:
         self.entities = entities
         
         self.image = self.canevas.create_oval(self.position[0],self.position[1],self.position[0]+self.size,self.position[1]+self.size, fill='red')
-
+        
+    def removeHP(self, value):
+        self.health -= value
+        if self.health<=0 :
+            self.entities.listEntities[1].remove(self)
+            self.destroy()
     
 class alien(instance):
     
@@ -88,6 +97,7 @@ class alien(instance):
     def goDown(self):
         self.canevas.move(self.image, 0, self.entities.yOffset)
 
+    
 
         
 
@@ -98,7 +108,7 @@ class player(instance):
         self.cheat = [0,0,0,0,0,0,0,0]
         self.attackSpeed = 30
         self.attackRange = 5
-        self.attackHP = 1
+        self.attackPower = 1
         self.score = 0
         self.scoreStringVar = scoreStringVar
         self.scoreStringVar.set(str(self.score))
@@ -123,15 +133,21 @@ class player(instance):
             self.cheatCode(self.cheat)
             
     def shoot(self, speed, hp, size):
-         print("pute")
+        tir = laser(self.canevas, self.position, 1, self.entities size, speed, hp)
 
     def getScore(self):
         print(self.score)
         return self.score
+    
+    def getHealth(self):
+        return self.health
 
     def cheatCode(self, lstcode):
         if lstcode == ["t","u","p","u","d","u","c","u"] :
             self.scoreUp(1000)
+        if lstcode == ["v","i","v","e","l","a","v","i"] :
+            self.health += 3
+            print(self.health)
 
     def scoreUp(self, value):
         self.score += value
@@ -146,6 +162,26 @@ class player(instance):
             
         
 class laser(instance):
-    def __init__(self, window, canevas, position, size = 5, speed = 30, health = 1):
-        super().__init__(window, canevas, position, size, speed, health)
+    def __init__(self, canevas, position, direction, entities, size = 5, speed = 10, health = 1):
+        super().__init__(canevas, position, size, speed, health, entities)
+        self.direction = direction
+        
+     def getPos(self):
+        return self.canevas.coords(self.image)[:1]
+        
+    def laserShot(self):
+        newY = self.getPos()[0] + self.speed*self.direction
+        if self.entities.borderPadding > newY or newY > (self.canevas.winfo_height() - self.entities.borderPadding - self.size) :
+            self.entities[3].remove(self)
+            self.destroy()
+        if self.direction == 1 :
+            for alien in self.entities.listEntities[1] :
+                if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
+                    self.entities.listEntities[3].remove(self)
+                    alien.removeHP(self.health)
+                    break
+        for typeEntities in self.entities :
+            for entity in typeEntities :
+                checkForCollision(self.canevas.coords(self.image), coordsB)
+            
         
