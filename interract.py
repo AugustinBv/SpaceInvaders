@@ -42,8 +42,8 @@ class entities :
             self.down = True
     
     def moveLaser(self):
-        for laser in self.entitiesCodex[3]:
-            
+        for laser in self.listEntities[3]:
+            laser.laserShot()
         self.window.after(int(self.delta), self.moveLaser())
     
     def moveAliens(self):
@@ -138,7 +138,7 @@ class player(instance):
             self.cheatCode(self.cheat)
             
     def shoot(self, speed, hp, size):
-        tir = laser(self.canevas, self.position, 1, self.entities size, speed, hp)
+        tir = laser(self.canevas, self.position, 1, self.entities, size, speed, hp)
 
     def getScore(self):
         print(self.score)
