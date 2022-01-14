@@ -52,6 +52,9 @@ class entities :
             alien.applySpeed()
         self.down = False
         self.window.after(int(self.delta), self.moveAliens)
+
+    def clear(self):
+        self.listEntities[1][0].canevas.delete('all')
             
             
 
@@ -93,9 +96,6 @@ class alien(instance):
     
     def goDown(self):
         self.canevas.move(self.image, 0, self.entities.yOffset)
-        
-        self.entities.listEntities[0][0].scoreUp(1)
-        self.canevas.event_generate("<<ScoreUpdate>>")
 
     
 
@@ -113,6 +113,8 @@ class player(instance):
         self.scoreStringVar = scoreStringVar
         self.scoreStringVar.set(str(self.score))
         self.entities.addEntity(self,0)
+
+        self.scoreUp(0)
     
     def bougeSTP(self, event):
         dir = 1
@@ -155,7 +157,7 @@ class player(instance):
     def checkForCollisionWithAliens(self):
         for alien in self.entities.listEntities[1]:
             if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
-                print("touché")
+                self.entities.clear()
         self.entities.window.after(int(self.entities.delta), self.checkForCollisionWithAliens)
             
         

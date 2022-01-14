@@ -14,7 +14,7 @@ borderPadding = 5
 spawnPadding = 50
 alienPadding = 10
 
-alienSpeed = 3
+alienSpeed = 30
 alienSize = 15
 alienHealth = 1
 yAlienDeplacement = 20
