@@ -79,14 +79,14 @@ while counter < nAlien:
     xOffset += alienPadding + alienSize
     counter += 1
 
-itsMeMario = interract.player(screen,[400,550],20,5,3,entities,scoreText,entitiesTypes[0])
-screen.bind('<Right>', itsMeMario.bougeSTP)
-screen.bind('<Left>', itsMeMario.bougeSTP)
-screen.bind('<Key>', itsMeMario.keys)
+player = interract.player(screen,[400,550],20,5,3,entities,scoreText,entitiesTypes[0])
+screen.bind('<Right>', player.bougeSTP)
+screen.bind('<Left>', player.bougeSTP)
+screen.bind('<Key>', player.keys)
 
 
 entities.moveAliens()
-itsMeMario.checkForCollisionWithAliens()
+player.checkForCollisionWithAliens()
 
 
 
