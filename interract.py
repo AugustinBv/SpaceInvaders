@@ -142,9 +142,9 @@ class player(instance):
             
     def shoot(self, speed, hp, size, event):
         currentTime = time.time()
-        if(currentTime - self.lastShot > self.shootDelay):
+        if((currentTime - self.lastShot) > self.shootDelay):
             tir = laser(self.canevas, [self.position[0],self.position[1] - 30], -1, self.entities,"laser", size, speed, hp)
-            self.lastShot = time.time
+            self.lastShot = time.time()
 
     def getScore(self):
         print(self.score)
