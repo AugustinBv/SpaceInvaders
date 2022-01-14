@@ -38,6 +38,11 @@ leftFrame.grid(row = 0,column=0)
 rightFrame = t.Frame(si)
 rightFrame.grid(row = 0, column=1)
 
+#Widget scoreLabelel de score
+scoreText = t.StringVar()
+scoreText.set("12")
+scoreLabel = t.Label(leftFrame,textvariable = scoreText)
+scoreLabel.grid(row= 0, column=0, padx= 5, pady= 5)
 
 
 #Widget fenetre de jeu
@@ -73,18 +78,15 @@ while counter < nAlien:
     xOffset += alienPadding + alienSize
     counter += 1
 
-itsMeMario = interract.player(screen,[400,550],20,5,3,entities)
+itsMeMario = interract.player(screen,[400,550],20,5,3,entities,scoreText)
 screen.bind('<Right>', itsMeMario.bougeSTP)
 screen.bind('<Left>', itsMeMario.bougeSTP)
 screen.bind('<Key>', itsMeMario.keys)
 
-#Widget label de score
-score = itsMeMario.getScore()
-lab = t.Label(leftFrame)
-lab["text"]="score : " + str(score)  #faire un score qui évolue
-lab.grid(row= 0, column=0, padx= 5, pady= 5)
 
 entities.moveAliens()
 itsMeMario.checkForCollisionWithAliens()
+
+
 
 si.mainloop()

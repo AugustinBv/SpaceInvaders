@@ -13,8 +13,6 @@ def checkForCollision(coordsA, coordsB):
         colliding = True
     return colliding
 
-def updateScore(scoreLabel):
-    scoreLabel.config()
 
 
 class entities :
@@ -95,13 +93,16 @@ class alien(instance):
     
     def goDown(self):
         self.canevas.move(self.image, 0, self.entities.yOffset)
+        
+        self.entities.listEntities[0][0].scoreUp(1)
+        self.canevas.event_generate("<<ScoreUpdate>>")
 
     
 
         
 
 class player(instance):
-    def __init__(self, canevas, position, size, speed, health,entities):
+    def __init__(self, canevas, position, size, speed, health,entities, scoreStringVar):
         super().__init__(canevas, position, size, health,entities)
         self.speed = speed
         self.cheat = [0,0,0,0,0,0,0,0]
@@ -109,6 +110,8 @@ class player(instance):
         self.attackRange = 5
         self.attackPower = 1
         self.score = 0
+        self.scoreStringVar = scoreStringVar
+        self.scoreStringVar.set(str(self.score))
         self.entities.addEntity(self,0)
     
     def bougeSTP(self, event):
@@ -146,7 +149,7 @@ class player(instance):
 
     def scoreUp(self, value):
         self.score += value
-        print(self.score)
+        self.scoreStringVar.set("score : " + str(self.score) + "      vies : " + str(self.health))
 
     
     def checkForCollisionWithAliens(self):
