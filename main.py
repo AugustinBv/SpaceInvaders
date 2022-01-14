@@ -3,6 +3,7 @@ from tkinter.constants import LEFT, RIGHT
 from random import randint
 from functools import partial
 import interract
+import time
 
 
 
@@ -79,7 +80,7 @@ while counter < nAlien:
     xOffset += alienPadding + alienSize
     counter += 1
 
-itsMeMario = interract.player(screen,[400,550],20,5,3,entities,scoreText,entitiesTypes[0])
+itsMeMario = interract.player(screen,[400,550],20,5,3,entities,scoreText,entitiesTypes[0], 0.5)
 screen.bind('<Right>', itsMeMario.bougeSTP)
 screen.bind('<Left>', itsMeMario.bougeSTP)
 screen.bind('<Key>', itsMeMario.keys)

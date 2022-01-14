@@ -1,5 +1,5 @@
 import tkinter as t
-
+import time
 
 def checkForCollision(coordsA, coordsB):
     
@@ -108,7 +108,7 @@ class alien(instance):
         
 
 class player(instance):
-    def __init__(self, canevas, position, size, speed, health,entities, scoreStringVar, type):
+    def __init__(self, canevas, position, size, speed, health,entities, scoreStringVar, type, shootDelay):
         super().__init__(canevas, position, size, health,entities, type)
         self.speed = speed
         self.cheat = [0,0,0,0,0,0,0,0]
@@ -119,6 +119,9 @@ class player(instance):
         self.scoreStringVar = scoreStringVar
         self.scoreStringVar.set(str(self.score))
 
+        self.lastShot = time.time()
+        self.shootDelay = shootDelay
+
         self.scoreUp(0)
     
     def bougeSTP(self, event):
@@ -126,7 +129,7 @@ class player(instance):
         if event.keysym == "Left":
             dir = -1
         self.canevas.move(self.image,self.speed*dir,0)
-        self.position = self.canevas.coords(self.image)[:1]
+        self.position = self.canevas.coords(self.image)[:2]
 
     def keys(self, event):
         key = event.keysym
@@ -138,7 +141,10 @@ class player(instance):
             self.cheatCode(self.cheat)
             
     def shoot(self, speed, hp, size, event):
-        tir = laser(self.canevas, [self.position[0],self.position[1] - 30], -1, self.entities,"laser", size, speed, hp)
+        currentTime = time.time()
+        if(currentTime - self.lastShot > self.shootDelay):
+            tir = laser(self.canevas, [self.position[0],self.position[1] - 30], -1, self.entities,"laser", size, speed, hp)
+            self.lastShot = time.time
 
     def getScore(self):
         print(self.score)
@@ -180,21 +186,18 @@ class laser(instance):
         super().__init__(canevas, position, size, health, entities,type)
         self.speed = speed
         self.direction = direction
-        
-    def getPos(self):
-        return self.canevas.coords(self.image)[:1]
+
         
     def laserShot(self):
         moveY = self.speed*self.direction
-        newY = self.getPos()[0] + moveY
+        newY = self.position[1] + moveY
         if self.entities.borderPadding > newY or newY > (self.canevas.winfo_height() - self.entities.borderPadding - self.size) :
-            self.entities[3].remove(self)
-            self.destroy()
-        if self.direction == 1 :
+            self.removeHP(self.health)
+        elif self.direction == -1 :
             for alien in self.entities.entitiesCodex["alien"] :
                 if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
-                    self.entities.entitiesCodex[self.type].remove(self)
                     alien.removeHP(self.health)
+                    self.removeHP(self.health)
                     break
         else :
             for entity in self.entities.entitiesCodex["player"] + self.entities.entitiesCodex["wall"] :
@@ -202,3 +205,4 @@ class laser(instance):
                     self.entities.entitiesCodex[self.type].remove(self)
                     entity.removeHP(self.health)
         self.canevas.move(self.image, 0, moveY)
+        self.position = self.canevas.coords(self.image)[:2]
