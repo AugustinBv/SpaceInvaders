@@ -1,10 +1,7 @@
 import tkinter as t
-<<<<<<< HEAD
 from random import randint
 
-=======
 import time
->>>>>>> 8aa2afa0f0753863c7630264bb71e8e2496a0d9e
 
 def checkForCollision(coordsA, coordsB):
     
@@ -198,18 +195,13 @@ class laser(instance):
         moveY = self.speed*self.direction
         newY = self.position[1] + moveY
         if self.entities.borderPadding > newY or newY > (self.canevas.winfo_height() - self.entities.borderPadding - self.size) :
-<<<<<<< HEAD
-            self.entities[3].remove(self)
-            self.destroy()
-        if self.direction == -1 :
-=======
             self.removeHP(self.health)
         elif self.direction == -1 :
->>>>>>> 8aa2afa0f0753863c7630264bb71e8e2496a0d9e
             for alien in self.entities.entitiesCodex["alien"] :
                 if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
                     alien.removeHP(self.health)
                     self.removeHP(self.health)
+                    self.entitiesCodex["player"].scoreUP(50)
                     break
         else :
             for entity in self.entities.entitiesCodex["player"] + self.entities.entitiesCodex["wall"] :
