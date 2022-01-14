@@ -49,14 +49,16 @@ class entities :
         self.window.after(int(self.delta), self.moveLaser)
     
     def moveAliens(self):
-        for alien in self.entitiesCodex["alien"]:
+        for alien in self.entitiesCodex["alien"]: 
+            if randint(0,1000) < 10 :
+                tir = laser(alien.canevas, alien.position, 1, alien.entities, "laser", 10, 5, 2)
             alien.checkForBorders()
         for alien in self.entitiesCodex["alien"]:
             if(self.down):
                 alien.goDown()
             alien.applySpeed()
         self.down = False
-   #     tir = laser(self.canevas, self.position, 1, self.entities, "laser", size, speed, hp)
+       
         self.window.after(int(self.delta), self.moveAliens)
 
     def clear(self):
@@ -82,6 +84,7 @@ class instance:
     def removeHP(self, value):
         self.health -= value
         if self.health<=0 :
+            self.health = 0
             self.entities.entitiesCodex[self.type].remove(self)
             self.canevas.delete(self.image)
     
@@ -201,12 +204,13 @@ class laser(instance):
                 if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
                     alien.removeHP(self.health)
                     self.removeHP(self.health)
-                    self.entitiesCodex["player"].scoreUP(50)
+                    self.entities.entitiesCodex["player"][0].scoreUp(50)
                     break
         else :
             for entity in self.entities.entitiesCodex["player"] + self.entities.entitiesCodex["wall"] :
                 if(checkForCollision(self.canevas.coords(self.image), self.canevas.coords(entity.image))):
                     self.entities.entitiesCodex[self.type].remove(self)
                     entity.removeHP(self.health)
+                    self.removeHP(self.health)
         self.canevas.move(self.image, 0, moveY)
         self.position = self.canevas.coords(self.image)[:2]
