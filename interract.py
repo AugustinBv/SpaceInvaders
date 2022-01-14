@@ -44,7 +44,7 @@ class entities :
     def moveLaser(self):
         for laser in self.entitiesCodex["laser"]:
             laser.laserShot()
-        self.window.after(int(self.delta), self.moveLaser())
+        self.window.after(int(self.delta), self.moveLaser)
     
     def moveAliens(self):
         for alien in self.entitiesCodex["alien"]:
@@ -138,7 +138,7 @@ class player(instance):
             self.cheatCode(self.cheat)
             
     def shoot(self, speed, hp, size, event):
-        tir = laser(self.canevas, self.position, 1, self.entities, size, speed, hp)
+        tir = laser(self.canevas, self.position, -1, self.entities,"laser", size, speed, hp)
 
     def getScore(self):
         print(self.score)
@@ -177,7 +177,8 @@ class player(instance):
         
 class laser(instance):
     def __init__(self, canevas, position, direction, entities, type, size = 5, speed = 10, health = 1) :
-        super().__init__(canevas, position, size, speed, health, entities,type)
+        super().__init__(canevas, position, size, health, entities,type)
+        self.speed = speed
         self.direction = direction
         
     def getPos(self):
@@ -196,9 +197,8 @@ class laser(instance):
                     alien.removeHP(self.health)
                     break
         else :
-            for typeEntities in self.entities.entitiesCodex["player"] + self.entities.entitiesCodex["wall"] :
-                for entity in typeEntities :
-                    if(checkForCollision(self.canevas.coords(self.image), self.canevas.coordes(entity.image))):
-                        self.entities.entitiesCodex[self.type].remove(self)
-                        entity.removeHP(self.health)
+            for entity in self.entities.entitiesCodex["player"] + self.entities.entitiesCodex["wall"] :
+                if(checkForCollision(self.canevas.coords(self.image), self.canevas.coords(entity.image))):
+                    self.entities.entitiesCodex[self.type].remove(self)
+                    entity.removeHP(self.health)
         self.canevas.move(self.image, 0, moveY)

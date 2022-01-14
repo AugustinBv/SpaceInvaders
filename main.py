@@ -8,13 +8,13 @@ import interract
 
 # Constantes
 
-framerate = 10
+framerate = 75
 
 borderPadding = 5
 spawnPadding = 50
 alienPadding = 10
 
-alienSpeed = 5
+alienSpeed = 3
 alienSize = 15
 alienHealth = 1
 yAlienDeplacement = 20
