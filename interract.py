@@ -100,6 +100,7 @@ class alien(instance):
 
     def applySpeed(self):
         self.canevas.move(self.image,self.entities.speed,0)
+        self.position = self.canevas.coords(self.image)
     
     def checkForBorders(self):
         newX = self.getPos()[0] + self.entities.speed
