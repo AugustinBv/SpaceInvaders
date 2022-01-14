@@ -13,9 +13,12 @@ def checkForCollision(coordsA, coordsB):
         colliding = True
     return colliding
 
-    
 
-class ennemies :
+
+
+
+
+class entities :
 
     def __init__(self, window, frameRate, borderPadding, speed, yOffset):
 
@@ -28,10 +31,10 @@ class ennemies :
         self.down = False
         self.yOffset = yOffset
 
-        self.listAliens = []
+        self.listEntities= [[], [], [], []]
     
-    def addAlien(self, alien):
-        self.listAliens.append(alien)
+    def addEntity(self, entity, type = 1):
+        self.listEntities[type].append(entity)
     
     def changeDir(self):
         self.speed *= -1
@@ -40,9 +43,9 @@ class ennemies :
             
     
     def moveAliens(self):
-        for alien in self.listAliens:
+        for alien in self.listEntities[1]:
             alien.checkForBorders()
-        for alien in self.listAliens:
+        for alien in self.listEntities[1]:
             if(self.down):
                 alien.goDown()
             alien.applySpeed()
@@ -53,49 +56,51 @@ class ennemies :
 
 
 class instance:
-    def __init__(self, canevas, position, size, health):
+    def __init__(self, canevas, position, size, health, entities):
 
         self.canevas = canevas
         self.position = position
         self.size = size
         self.health = health
+        self.entities = entities
         
         self.image = self.canevas.create_oval(self.position[0],self.position[1],self.position[0]+self.size,self.position[1]+self.size, fill='red')
-    
+
     
 class alien(instance):
     
-    def __init__(self, canevas, position, size, health, group):
+    def __init__(self, canevas, position, size, health, entities):
 
-        super().__init__(canevas, position, size, health)
-        self.group = group
-        self.group.addAlien(self)
+        super().__init__(canevas, position, size, health, entities)
+        self.entities.addEntity(self,1)
 
     def getPos(self):
         return self.canevas.coords(self.image)[:1]
 
     def applySpeed(self):
-        self.canevas.move(self.image,self.group.speed,0)
+        self.canevas.move(self.image,self.entities.speed,0)
     
     def checkForBorders(self):
-        newX = self.getPos()[0] + self.group.speed
-        if self.group.borderPadding > newX or newX > (self.canevas.winfo_width() - self.group.borderPadding - self.size) :
-            self.group.changeDir()
+        newX = self.getPos()[0] + self.entities.speed
+        if self.entities.borderPadding > newX or newX > (self.canevas.winfo_width() - self.entities.borderPadding - self.size) :
+            self.entities.changeDir()
     
     def goDown(self):
-        self.canevas.move(self.image, 0, self.group.yOffset)
+        self.canevas.move(self.image, 0, self.entities.yOffset)
 
 
         
 
 class player(instance):
-    def __init__(self, canevas, position, size, speed, health):
-        super().__init__(canevas, position, size, health)
+    def __init__(self, canevas, position, size, speed, health,entities):
+        super().__init__(canevas, position, size, health,entities)
         self.speed = speed
         self.cheat = [0,0,0,0,0,0,0,0]
         self.attackSpeed = 30
         self.attackRange = 5
         self.attackHP = 1
+
+        self.entities.addEntity(self, 0)
     
     def bougeSTP(self, event):
         dir = 1
@@ -116,6 +121,12 @@ class player(instance):
             
     def shoot(self, speed, hp, size):
          print("pute")
+    
+    def checkForCollisionWithAliens(self):
+        for alien in self.entities.listEntities[1]:
+            if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
+                print("touché")
+        self.entities.window.after(int(self.entities.delta), self.checkForCollisionWithAliens)
             
         
 class laser(instance):

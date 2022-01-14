@@ -14,42 +14,12 @@ borderPadding = 5
 spawnPadding = 50
 alienPadding = 10
 
-alienSpeed = 3
+alienSpeed = 30
 alienSize = 15
 alienHealth = 1
-yAlienDeplacement = 10
+yAlienDeplacement = 20
 
 nAlien = 56
-
-# Variables
-
-
-
-# fonctions
-
-def startGame(screenSG, ennemiesSG):
-
-
-    counter = 0
-    xOffset = spawnPadding
-    yOffset = 20
-
-    while counter < nAlien:
-        if( xOffset + alienPadding + alienSize > 800 - spawnPadding):
-            xOffset = spawnPadding
-            yOffset += 20
-        alien1 = interract.alien(screenSG,[xOffset,yOffset],alienSize,alienHealth,ennemiesSG)
-        xOffset += alienPadding + alienSize
-        counter += 1
-
-    itsMeMario = interract.player(screenSG,[400,550],20,5,50)
-    screenSG.bind('<Right>', itsMeMario.bougeSTP)
-    screenSG.bind('<Left>', itsMeMario.bougeSTP)
-    screenSG.bind('<Key>', itsMeMario.keys)
-
-    ennemiesSG.moveAliens()
-    gameRunning = True
-
 
 
 #Création de la fenêtre
@@ -58,9 +28,6 @@ si = t.Tk()
 si.title('Space Invaders')
 si["bg"]="grey"
 largeur, hauteur = 800, 600
-
-
-ennemies = interract.ennemies(si, framerate, borderPadding, alienSpeed, yAlienDeplacement)
 
 
 
@@ -81,7 +48,7 @@ screen.grid(row= 1, column=0, padx= 5, pady= 5)
 screen.focus_set()
 
 #widget bouton start
-buttonStart = t.Button(rightFrame, text = "Start", fg = "red",command=partial(startGame,screen,ennemies))
+buttonStart = t.Button(rightFrame, text = "Start", fg = "red")
 buttonStart.grid(row=0, column=0, padx= 5, pady= 5)
 
 
@@ -94,7 +61,27 @@ buttonQuit = t.Button(rightFrame, text = "Quitter", fg = "red", command =si.dest
 buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 
+entities = interract.entities(si, framerate, borderPadding, alienSpeed, yAlienDeplacement)
 
+counter = 0
+xOffset = spawnPadding
+yOffset = 20
+
+while counter < nAlien:
+    if( xOffset + alienPadding + alienSize > 800 - spawnPadding):
+        xOffset = spawnPadding
+        yOffset += 20
+    alien1 = interract.alien(screen,[xOffset,yOffset],alienSize,alienHealth,entities)
+    xOffset += alienPadding + alienSize
+    counter += 1
+
+itsMeMario = interract.player(screen,[400,550],20,5,50,entities)
+screen.bind('<Right>', itsMeMario.bougeSTP)
+screen.bind('<Left>', itsMeMario.bougeSTP)
+screen.bind('<Key>', itsMeMario.keys)
+
+entities.moveAliens()
+itsMeMario.checkForCollisionWithAliens()
 
 
 si.mainloop()
