@@ -21,6 +21,7 @@ yAlienDeplacement = 20
 
 nAlien = 56
 
+entitiesTypes = ["player","alien","wall","laser"]
 
 global score
 #Création de la fenêtre
@@ -64,7 +65,7 @@ buttonQuit = t.Button(rightFrame, text = "Quitter", fg = "red", command =si.dest
 buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 
-entities = interract.entities(si, framerate, borderPadding, alienSpeed, yAlienDeplacement)
+entities = interract.entities(si, framerate, borderPadding, alienSpeed, yAlienDeplacement, entitiesTypes)
 
 counter = 0
 xOffset = spawnPadding
@@ -74,11 +75,11 @@ while counter < nAlien:
     if( xOffset + alienPadding + alienSize > 800 - spawnPadding):
         xOffset = spawnPadding
         yOffset += 20
-    alien1 = interract.alien(screen,[xOffset,yOffset],alienSize,alienHealth,entities)
+    alien1 = interract.alien(screen,[xOffset,yOffset],alienSize,alienHealth,entities,entitiesTypes[1])
     xOffset += alienPadding + alienSize
     counter += 1
 
-itsMeMario = interract.player(screen,[400,550],20,5,3,entities,scoreText)
+itsMeMario = interract.player(screen,[400,550],20,5,3,entities,scoreText,entitiesTypes[0])
 screen.bind('<Right>', itsMeMario.bougeSTP)
 screen.bind('<Left>', itsMeMario.bougeSTP)
 screen.bind('<Key>', itsMeMario.keys)
