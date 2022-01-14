@@ -185,8 +185,10 @@ class laser(instance):
                     self.entities.entitiesCodex[self.type].remove(self)
                     alien.removeHP(self.health)
                     break
-        for typeEntities in self.entities :
-            for entity in typeEntities :
-                checkForCollision(self.canevas.coords(self.image), coordsB)
+        else :
+            for typeEntities in self.entities.listEntities[] :
+                for entity in typeEntities :
+                    checkForCollision(self.canevas.coords(self.image), self.canevas.coordes(entity.image))
+
             
         
