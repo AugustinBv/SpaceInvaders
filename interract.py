@@ -138,7 +138,7 @@ class player(instance):
             self.cheatCode(self.cheat)
             
     def shoot(self, speed, hp, size, event):
-        tir = laser(self.canevas, self.position, -1, self.entities,"laser", size, speed, hp)
+        tir = laser(self.canevas, [self.position[0],self.position[1] - 30], -1, self.entities,"laser", size, speed, hp)
 
     def getScore(self):
         print(self.score)
