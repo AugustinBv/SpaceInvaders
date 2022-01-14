@@ -80,7 +80,7 @@ class instance:
         self.health -= value
         if self.health<=0 :
             self.entities.entitiesCodex[self.type].remove(self)
-            self.destroy()
+            self.canevas.delete(self.image)
     
 class alien(instance):
     
@@ -150,19 +150,28 @@ class player(instance):
     def cheatCode(self, lstcode):
         if lstcode == ["t","u","p","u","d","u","c","u"] :
             self.scoreUp(1000)
-        if lstcode == ["v","i","v","e","l","a","v","i"] :
-            self.health += 3
+        elif lstcode == ["v","i","v","e","l","a","v","i"] :
+            self.removeHP(-3)
             print(self.health)
+        elif lstcode == ["v","a","c","h","i","e","r","m"] :
+            while self.entities.entitiesCodex["alien"] != []:
+                self.entities.entitiesCodex["alien"][0].removeHP(1000)
+
+            
 
     def scoreUp(self, value):
         self.score += value
+        self.scoreStringVar.set("score : " + str(self.score) + "      vies : " + str(self.health))
+
+    def removeHP(self, value):
+        super().removeHP(value)
         self.scoreStringVar.set("score : " + str(self.score) + "      vies : " + str(self.health))
 
     
     def checkForCollisionWithAliens(self):
         for alien in self.entities.entitiesCodex["alien"]:
             if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
-                self.entities.clear()
+                self.removeHP(1)
         self.entities.window.after(int(self.entities.delta), self.checkForCollisionWithAliens)
             
         
