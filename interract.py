@@ -17,7 +17,7 @@ def checkForCollision(coordsA, coordsB):
 
 class entities :
 
-    def __init__(self, window, frameRate, borderPadding, speed, yOffset):
+    def __init__(self, window, frameRate, borderPadding, speed, yOffset, types):
 
         self.window = window
 
@@ -28,10 +28,13 @@ class entities :
         self.down = False
         self.yOffset = yOffset
 
-        self.listEntities= [[], [], [], []]
+        self.entitiesCodex= {}
+
+        for type in types :
+            self.entitiesCodex[type] = []
     
-    def addEntity(self, entity, type = 1):
-        self.listEntities[type].append(entity)
+    def addEntity(self, entity, type):
+        self.entitiesCodex[type].append(entity)
     
     def changeDir(self):
         self.speed *= -1
@@ -39,14 +42,14 @@ class entities :
             self.down = True
     
     def moveLaser(self):
-        for laser in self.listEntities[3]:
+        for laser in self.entitiesCodex[3]:
             
         self.window.after(int(self.delta), self.moveLaser())
     
     def moveAliens(self):
-        for alien in self.listEntities[1]:
+        for alien in self.entitiesCodex[1]:
             alien.checkForBorders()
-        for alien in self.listEntities[1]:
+        for alien in self.entitiesCodex[1]:
             if(self.down):
                 alien.goDown()
             alien.applySpeed()
@@ -54,34 +57,37 @@ class entities :
         self.window.after(int(self.delta), self.moveAliens)
 
     def clear(self):
-        self.listEntities[1][0].canevas.delete('all')
+        self.entitiesCodex[1][0].canevas.delete('all')
             
             
 
 
 class instance:
-    def __init__(self, canevas, position, size, health, entities):
+    def __init__(self, canevas, position, size, health, entities, type):
 
         self.canevas = canevas
         self.position = position
         self.size = size
         self.health = health
+
         self.entities = entities
+        self.type = type
+        self.entities.addEntity(self,self.type)
         
         self.image = self.canevas.create_oval(self.position[0],self.position[1],self.position[0]+self.size,self.position[1]+self.size, fill='red')
         
     def removeHP(self, value):
         self.health -= value
         if self.health<=0 :
-            self.entities.listEntities[1].remove(self)
+            self.entities.entitiesCodex[1].remove(self)
             self.destroy()
     
 class alien(instance):
     
-    def __init__(self, canevas, position, size, health, entities):
+    def __init__(self, canevas, position, size, health, entities, type):
 
-        super().__init__(canevas, position, size, health, entities)
-        self.entities.addEntity(self,1)
+        super().__init__(canevas, position, size, health, entities, type)
+        
 
     def getPos(self):
         return self.canevas.coords(self.image)[:1]
@@ -102,8 +108,8 @@ class alien(instance):
         
 
 class player(instance):
-    def __init__(self, canevas, position, size, speed, health,entities, scoreStringVar):
-        super().__init__(canevas, position, size, health,entities)
+    def __init__(self, canevas, position, size, speed, health,entities, scoreStringVar, type):
+        super().__init__(canevas, position, size, health,entities, type)
         self.speed = speed
         self.cheat = [0,0,0,0,0,0,0,0]
         self.attackSpeed = 30
@@ -112,7 +118,6 @@ class player(instance):
         self.score = 0
         self.scoreStringVar = scoreStringVar
         self.scoreStringVar.set(str(self.score))
-        self.entities.addEntity(self,0)
 
         self.scoreUp(0)
     
@@ -155,18 +160,18 @@ class player(instance):
 
     
     def checkForCollisionWithAliens(self):
-        for alien in self.entities.listEntities[1]:
+        for alien in self.entities.entitiesCodex[1]:
             if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
                 self.entities.clear()
         self.entities.window.after(int(self.entities.delta), self.checkForCollisionWithAliens)
             
         
 class laser(instance):
-    def __init__(self, canevas, position, direction, entities, size = 5, speed = 10, health = 1):
-        super().__init__(canevas, position, size, speed, health, entities)
+    def __init__(self, canevas, position, direction, entities, type, size = 5, speed = 10, health = 1) :
+        super().__init__(canevas, position, size, speed, health, entities,type)
         self.direction = direction
         
-     def getPos(self):
+    def getPos(self):
         return self.canevas.coords(self.image)[:1]
         
     def laserShot(self):
@@ -175,9 +180,9 @@ class laser(instance):
             self.entities[3].remove(self)
             self.destroy()
         if self.direction == 1 :
-            for alien in self.entities.listEntities[1] :
+            for alien in self.entities.entitiesCodex[1] :
                 if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
-                    self.entities.listEntities[3].remove(self)
+                    self.entities.entitiesCodex[3].remove(self)
                     alien.removeHP(self.health)
                     break
         for typeEntities in self.entities :
