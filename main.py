@@ -9,22 +9,21 @@ import time
 
 # Constantes
 
-framerate = 75
+FRAMERATE = 75
 
-borderPadding = 5
-spawnPadding = 50
-alienPadding = 10
+BORDERPADDING = 5
+SPAWNPADDING = 50
+ALIENPADDING = 20
 
-alienSpeed = 3
-alienSize = 15
-alienHealth = 1
-yAlienDeplacement = 20
+ALIENSPEED = 2
+ALIENSIZE = 15
+ALIENSPEED = 1
+YALIENMOVE = 20
 
-nAlien = 56
+NALIEN = 20
 
-entitiesTypes = ["player","alien","wall","laser"]
+ENTITIESTYPES = ["player","alien","wall","laser"]
 
-global score
 #Création de la fenêtre
 si = t.Tk()
 
@@ -66,21 +65,21 @@ buttonQuit = t.Button(rightFrame, text = "Quitter", fg = "red", command =si.dest
 buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 
-entities = interract.entities(si, framerate, borderPadding, alienSpeed, yAlienDeplacement, entitiesTypes)
+entities = interract.entities(si, FRAMERATE, BORDERPADDING, ALIENSPEED, YALIENMOVE, ENTITIESTYPES)
 
 counter = 0
-xOffset = spawnPadding
+xOffset = SPAWNPADDING
 yOffset = 20
 
-while counter < nAlien:
-    if( xOffset + alienPadding + alienSize > 800 - spawnPadding):
-        xOffset = spawnPadding
+while counter < NALIEN:
+    if( xOffset + ALIENPADDING + ALIENSIZE > 800 - SPAWNPADDING):
+        xOffset = SPAWNPADDING
         yOffset += 20
-    alien1 = interract.alien(screen,[xOffset,yOffset],alienSize,alienHealth,entities,entitiesTypes[1])
-    xOffset += alienPadding + alienSize
+    alien1 = interract.alien(screen,[xOffset,yOffset],ALIENSIZE,ALIENSPEED,entities,ENTITIESTYPES[1])
+    xOffset += ALIENPADDING + ALIENSIZE
     counter += 1
 
-itsMeMario = interract.player(screen,[400,550],20,10,3,entities,scoreText,entitiesTypes[0], 0.3)
+itsMeMario = interract.player(screen,[400,550],20,10,3,entities,scoreText,ENTITIESTYPES[0], 0.3)
 screen.bind('<Right>', itsMeMario.bougeSTP)
 screen.bind('<Left>', itsMeMario.bougeSTP)
 screen.bind('<Key>', itsMeMario.keys)
