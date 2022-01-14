@@ -17,6 +17,7 @@ alienSize = 15
 alienHealth = 1
 yAlienDeplacement = 10
 
+global score
 #Création de la fenêtre
 si = t.Tk()
 
@@ -30,10 +31,7 @@ leftFrame.grid(row = 0,column=0)
 rightFrame = t.Frame(si)
 rightFrame.grid(row = 0, column=1)
 
-#Widget label de score
-lab = t.Label(leftFrame)
-lab["text"]="score : "  #faire un score qui évolue
-lab.grid(row= 0, column=0, padx= 5, pady= 5)
+
 
 #Widget fenetre de jeu
 screen = t.Canvas(leftFrame, width = largeur, height = hauteur, bg = 'black')
@@ -74,6 +72,12 @@ itsMeMario = interract.player(screen,[400,550],20,5,50)
 screen.bind('<Right>', itsMeMario.bougeSTP)
 screen.bind('<Left>', itsMeMario.bougeSTP)
 screen.bind('<Key>', itsMeMario.keys)
+
+#Widget label de score
+score = itsMeMario.getScore()
+lab = t.Label(leftFrame)
+lab["text"]="score : " + str(score)  #faire un score qui évolue
+lab.grid(row= 0, column=0, padx= 5, pady= 5)
 
 ennemies.moveAliens()
 

@@ -96,6 +96,7 @@ class player(instance):
         self.attackSpeed = 30
         self.attackRange = 5
         self.attackHP = 1
+        self.score = 0
     
     def bougeSTP(self, event):
         dir = 1
@@ -103,19 +104,31 @@ class player(instance):
             dir = -1
         self.canevas.move(self.image,self.speed*dir,0)
         self.position = self.canevas.coords(self.image)[:1]
-    
+
     def keys(self, event):
         key = event.keysym
-        print(type(self.cheat))
         if key == "space":
             self.shoot(self.attackSpeed,self.attackHP,self.attackRange)
         elif key != "Left" and key != "Right":
             self.cheat.remove(self.cheat[0])
             self.cheat.append(key)
-            print(self.cheat)
+            self.cheatCode(self.cheat)
             
     def shoot(self, speed, hp, size):
          print("pute")
+
+    def getScore(self):
+        print(self.score)
+        return self.score
+
+    def cheatCode(self, lstcode):
+        if lstcode == ["t","u","p","u","d","u","c","u"] :
+            self.scoreUp(1000)
+
+    def scoreUp(self, value):
+        self.score += value
+        print(self.score)
+
             
         
 class laser(instance):
