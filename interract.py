@@ -114,7 +114,7 @@ class player(instance):
         self.cheat = [0,0,0,0,0,0,0,0]
         self.attackSpeed = 30
         self.attackRange = 5
-        self.attackPower = 1
+        self.attackHP = 1
         self.score = 0
         self.scoreStringVar = scoreStringVar
         self.scoreStringVar.set(str(self.score))
@@ -137,7 +137,7 @@ class player(instance):
             self.cheat.append(key)
             self.cheatCode(self.cheat)
             
-    def shoot(self, speed, hp, size):
+    def shoot(self, speed, hp, size, event):
         tir = laser(self.canevas, self.position, 1, self.entities, size, speed, hp)
 
     def getScore(self):
@@ -175,7 +175,8 @@ class laser(instance):
         return self.canevas.coords(self.image)[:1]
         
     def laserShot(self):
-        newY = self.getPos()[0] + self.speed*self.direction
+        moveY = self.speed*self.direction
+        newY = self.getPos()[0] + moveY
         if self.entities.borderPadding > newY or newY > (self.canevas.winfo_height() - self.entities.borderPadding - self.size) :
             self.entities[3].remove(self)
             self.destroy()
@@ -186,9 +187,9 @@ class laser(instance):
                     alien.removeHP(self.health)
                     break
         else :
-            for typeEntities in self.entities.listEntities[] :
+            for typeEntities in self.entities.entitiesCodex["player"] + self.entities.entitiesCodex["walls"] :
                 for entity in typeEntities :
-                    checkForCollision(self.canevas.coords(self.image), self.canevas.coordes(entity.image))
-
-            
-        
+                    if(checkForCollision(self.canevas.coords(self.image), self.canevas.coordes(entity.image))):
+                        self.entities.entitiesCodex[self.type].remove(self)
+                        entity.removeHP(self.health)
+        self.canevas.move(self.image, 0, moveY)

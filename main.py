@@ -8,7 +8,7 @@ import interract
 
 # Constantes
 
-framerate = 30
+framerate = 10
 
 borderPadding = 5
 spawnPadding = 50
@@ -83,9 +83,11 @@ itsMeMario = interract.player(screen,[400,550],20,5,3,entities,scoreText,entitie
 screen.bind('<Right>', itsMeMario.bougeSTP)
 screen.bind('<Left>', itsMeMario.bougeSTP)
 screen.bind('<Key>', itsMeMario.keys)
+screen.bind('<space>', lambda event : itsMeMario.shoot(2,1,15,event))
 
 
 entities.moveAliens()
+entities.moveLaser()
 itsMeMario.checkForCollisionWithAliens()
 
 
