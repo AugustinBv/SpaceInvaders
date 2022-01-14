@@ -1,7 +1,9 @@
 import tkinter as t
 from tkinter.constants import LEFT, RIGHT
 from random import randint
+from functools import partial
 import interract
+
 
 
 # Constantes
@@ -15,7 +17,10 @@ alienPadding = 10
 alienSpeed = 3
 alienSize = 15
 alienHealth = 1
-yAlienDeplacement = 10
+yAlienDeplacement = 20
+
+nAlien = 56
+
 
 global score
 #Création de la fenêtre
@@ -24,6 +29,8 @@ si = t.Tk()
 si.title('Space Invaders')
 si["bg"]="grey"
 largeur, hauteur = 800, 600
+
+
 
 #Separation de la fenetre
 leftFrame = t.Frame(si)
@@ -39,8 +46,9 @@ screen.grid(row= 1, column=0, padx= 5, pady= 5)
 screen.focus_set()
 
 #widget bouton start
-startMenu = t.Button(rightFrame, text = "Start", fg = "red")
-startMenu.grid(row=0, column=0, padx= 5, pady= 5)
+buttonStart = t.Button(rightFrame, text = "Start", fg = "red")
+buttonStart.grid(row=0, column=0, padx= 5, pady= 5)
+
 
 #widget bouton menu
 buttonMenu = t.Button(rightFrame, text = "Menu", fg = "red")
@@ -50,25 +58,22 @@ buttonMenu.grid(row=1, column=0, padx= 5, pady= 5)
 buttonQuit = t.Button(rightFrame, text = "Quitter", fg = "red", command =si.destroy)
 buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
-#screen.create_oval(50,50,70,70,outline='red',fill='red')
 
-ennemies = interract.ennemies(si, framerate, borderPadding, alienSpeed, yAlienDeplacement)
+entities = interract.entities(si, framerate, borderPadding, alienSpeed, yAlienDeplacement)
 
-nAlien = 56
 counter = 0
 xOffset = spawnPadding
 yOffset = 20
 
 while counter < nAlien:
-
     if( xOffset + alienPadding + alienSize > 800 - spawnPadding):
         xOffset = spawnPadding
         yOffset += 20
-    alien1 = interract.alien(screen,[xOffset,yOffset],alienSize,alienHealth,ennemies)
+    alien1 = interract.alien(screen,[xOffset,yOffset],alienSize,alienHealth,entities)
     xOffset += alienPadding + alienSize
     counter += 1
 
-itsMeMario = interract.player(screen,[400,550],20,5,50)
+itsMeMario = interract.player(screen,[400,550],20,5,3,entities)
 screen.bind('<Right>', itsMeMario.bougeSTP)
 screen.bind('<Left>', itsMeMario.bougeSTP)
 screen.bind('<Key>', itsMeMario.keys)
@@ -79,7 +84,7 @@ lab = t.Label(leftFrame)
 lab["text"]="score : " + str(score)  #faire un score qui évolue
 lab.grid(row= 0, column=0, padx= 5, pady= 5)
 
-ennemies.moveAliens()
-
+entities.moveAliens()
+itsMeMario.checkForCollisionWithAliens()
 
 si.mainloop()
