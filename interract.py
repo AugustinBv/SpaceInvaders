@@ -134,8 +134,13 @@ class player(instance):
         dir = 1
         if event.keysym == "Left":
             dir = -1
-        self.canevas.move(self.image,self.speed*dir,0)
-        self.position = self.canevas.coords(self.image)[:2]
+
+        moveX = self.speed*dir
+        newX = self.position[0] + moveX
+        if not(self.entities.borderPadding > newX or newX > (self.canevas.winfo_height() - self.entities.borderPadding - self.size)) :
+            self.canevas.move(self.image,self.speed*dir,0)
+            self.position = self.canevas.coords(self.image)[:2]
+        
 
     def keys(self, event):
         key = event.keysym
@@ -164,7 +169,6 @@ class player(instance):
             self.scoreUp(1000)
         elif lstcode == ["v","i","v","e","l","a","v","i"] :
             self.removeHP(-3)
-            print(self.health)
         elif lstcode == ["v","a","c","h","i","e","r","m"] :
             while self.entities.entitiesCodex["alien"] != []:
                 self.entities.entitiesCodex["alien"][0].removeHP(1000)
