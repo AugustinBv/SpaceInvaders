@@ -13,9 +13,8 @@ def checkForCollision(coordsA, coordsB):
         colliding = True
     return colliding
 
-
-
-
+def updateScore(scoreLabel):
+    scoreLabel.config()
 
 
 class entities :
