@@ -1,4 +1,5 @@
 import tkinter as t
+from random import randint
 
 
 def checkForCollision(coordsA, coordsB):
@@ -54,6 +55,7 @@ class entities :
                 alien.goDown()
             alien.applySpeed()
         self.down = False
+   #     tir = laser(self.canevas, self.position, 1, self.entities, "laser", size, speed, hp)
         self.window.after(int(self.delta), self.moveAliens)
 
     def clear(self):
@@ -138,7 +140,7 @@ class player(instance):
             self.cheatCode(self.cheat)
             
     def shoot(self, speed, hp, size, event):
-        tir = laser(self.canevas, self.position, 1, self.entities, size, speed, hp)
+        tir = laser(self.canevas, self.position, -1, self.entities,"laser", size, speed, hp)
 
     def getScore(self):
         print(self.score)
@@ -185,21 +187,20 @@ class laser(instance):
         return self.canevas.coords(self.image)[:1]
         
     def laserShot(self):
-        moveY = -self.speed*self.direction
+        moveY = self.speed*self.direction
         newY = self.getPos()[0] + moveY
         if self.entities.borderPadding > newY or newY > (self.canevas.winfo_height() - self.entities.borderPadding - self.size) :
             self.entities[3].remove(self)
             self.destroy()
-        if self.direction == 1 :
+        if self.direction == -1 :
             for alien in self.entities.entitiesCodex["alien"] :
                 if(checkForCollision(self.canevas.coords(self.image),self.canevas.coords(alien.image))):
                     self.entities.entitiesCodex[self.type].remove(self)
                     alien.removeHP(self.health)
                     break
         else :
-            for typeEntities in self.entities.entitiesCodex["player"] + self.entities.entitiesCodex["wall"] :
-                for entity in typeEntities :
-                    if(checkForCollision(self.canevas.coords(self.image), self.canevas.coords(entity.image))):
-                        self.entities.entitiesCodex[self.type].remove(self)
-                        entity.removeHP(self.health)
+            for entity in self.entities.entitiesCodex["player"] + self.entities.entitiesCodex["wall"] :
+                if(checkForCollision(self.canevas.coords(self.image), self.canevas.coords(entity.image))):
+                    self.entities.entitiesCodex[self.type].remove(self)
+                    entity.removeHP(self.health)
         self.canevas.move(self.image, 0, moveY)
