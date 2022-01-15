@@ -21,8 +21,11 @@ def checkForCollision(coordsA, coordsB):
 
 class GameOptions :
 
+    # Objet contenant plusieurs informations pour le bon déroulement du jeu
+
     def __init__(self, frameRate, screenBorderPadding, alienSpeed, alienSize, alienDownMove, entitiesTypes, shootingChance,
      shootingAlienProportion, nAliens, spawnPadding, alienPadding):
+
         self.frameRate = frameRate
         self.frameTime = 1/float(frameRate) * 1000
         self.screenBorderPadding = screenBorderPadding
@@ -38,6 +41,8 @@ class GameOptions :
         self.alienPadding = alienPadding
 
 class Game :
+
+    # Objet mâitre qui contient tous les autres objets et qui contient les méthodes principales du jeu, il gère le déroulement de la partie
 
     def __init__(self,options, master, canvas, lives, text):
 
@@ -58,9 +63,11 @@ class Game :
         self.lost = False
     
     def updateLabel(self):
+        # Méthode qui met à jour le texte du label avec le score et les vies restantes
         self.textLabel.set("score : " + str(self.score) + "      vies : " + str(self.lives))       
 
     def scoreUp(self, value):
+        # Méthode qui ajoute le montant "value" au score
         self.score += value
         self.updateLabel()       
     
@@ -83,36 +90,41 @@ class Game :
                 self.currentLevel.entities["alien"][0].removeHP(1000)
 
     def startLevel(self):
+        # Méthode qui initialise le niveau en créant les ennemis, le joueur et lance les méthodes récursives
+
         self.canvas.event_generate("<<GameStarted>>")
         self.levelIsRunning = True
-        self.currentLevel = Level(self)
-        self.currentLevel.createAliens(self.options.nAliens, self.options.spawnPadding, self.options.alienPadding)
-        self.currentPlayer = player([400,550],20,10,1,self.currentLevel,self.options.entitiesTypes[0], 0.3)
-        self.currentLevel.gameLoop()
+        self.currentLevel = Level(self) # Initialisation du niveau
+
+        self.currentLevel.createAliens(self.options.nAliens, self.options.spawnPadding, self.options.alienPadding) # création des aliens
+        self.currentPlayer = player([400,550],20,10,1,self.currentLevel,self.options.entitiesTypes[0], 0.3) # création du joueur
+
+        self.currentLevel.gameLoop() # Lancement des méthodes récursives pour le déplacement des aliens et des lasers 
 
     
     def Restart(self):
+        # Méthode appelé pour lancer le niveau quand on commence ou recommence la partie ou quand on meurt
 
-        if(self.currentLevel != None):
+        if(self.currentLevel != None): # si ce n'est pas la première fois que l'on lance un niveau
             self.currentLevel.gameOver = True
-            self.currentLevel.clearLevel()
+            self.currentLevel.clearLevel() # on supprime le niveau actuel
         
-        if(self.lost):
-            self.lives -=1
+        if(self.lost): # si on vient de mourrir
+            self.lives -=1 #on enlève une vie
             self.lost = False
         else:
-            self.lives = self.startLives
+            self.lives = self.startLives # remise à zéro de la vie et du score
             self.score = 0
+        self.updateLabel() #mise à jour du label
 
-        self.updateLabel()
-
-        if(not self.lives <=0):
-            self.startLevel()
+        if(not self.lives <=0): # si il nous reste des vies
+            self.startLevel() 
             
     
 
 
 class Level :
+    # Objet contenant tous les entités du jeu et les gèrent
 
     def __init__(self, game):
 
@@ -131,27 +143,30 @@ class Level :
         self.gameOver = False
     
     def gameLoop(self):
+        # méthode qui lance les méthodes récursives pour le déplacement des aliens et des lasers 
         self.moveAliens()
         self.moveLaser()
-        self.entities["player"][0].checkForCollisionWithAliens()
+        self.entities["player"][0].checkForCollisionWithAliens() # on vérifie que les aliens n'entre pas en collision avec le joueur
 
     def addEntity(self, entity, type):
+        # méthode pour ajouter une nouvelle entité dans le niveau
         self.entities[type].append(entity)
     
     def createAliens(self,n, spawnPadding, alienPadding):
+        # méthode qui crée n nombre d'aliens des 2 types (ceux qui tirent et ceux qui ne tirent pas)
         counter = 0
         xOffset = spawnPadding
         yOffset = 20
 
         while counter < n:
-            if( xOffset + alienPadding + self.options.alienSize > 800 - spawnPadding):
+            if( xOffset + alienPadding + self.options.alienSize > self.master.winfo_width - spawnPadding): # gestion de la position du nouvel alien
                 xOffset = spawnPadding
                 yOffset += 20
-            if(randint(1,1000) < 1000 * self.options.shootingAlienProportion):
+            if(randint(1,1000) < 1000 * self.options.shootingAlienProportion): # choix de création d'un type d'alien selon la proportion voulue
                 shootingAlien([xOffset,yOffset], self.options.alienSize, 1, self, self.options.entitiesTypes[1],25)
             else:
                 alien([xOffset,yOffset], self.options.alienSize, 1, self, self.options.entitiesTypes[1],10)
-            xOffset += alienPadding + self.options.alienSize
+            xOffset += alienPadding + self.options.alienSize # on se décale
             counter += 1
 
     def changeAlienDir(self):
