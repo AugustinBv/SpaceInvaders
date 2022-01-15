@@ -54,13 +54,13 @@ canvas.grid(row= 1, column=0, padx= 5, pady= 5)
 canvas.focus_set()
 
 # Widget bouton start
-buttonStart = t.Button(rightFrame, text = "Start", fg = "red")
+buttonStart = t.Button(rightFrame, text = "  Start  ", fg = "red")
 buttonStart.grid(row=0, column=0, padx= 5, pady= 5)
 
 
 # Widget bouton menu
-buttonMenu = t.Button(rightFrame, text = "Menu", fg = "red")
-buttonMenu.grid(row=1, column=0, padx= 5, pady= 5)
+#buttonMenu = t.Button(rightFrame, text = "Menu", fg = "red")
+#buttonMenu.grid(row=1, column=0, padx= 5, pady= 5)
 
 # Widget bouton quitter
 buttonQuit = t.Button(rightFrame, text = "Quitter", fg = "red", command =window.destroy)
@@ -68,11 +68,13 @@ buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 
 options = interract.GameOptions(FRAMERATE,BORDERPADDING,ALIENSPEED,ALIENSIZE, ALIENYMOVE,ENTITIESTYPES,
- ALIENSHOOTINGCHANCE, SHOOTINGALIENPROPORTION)
+ ALIENSHOOTINGCHANCE, SHOOTINGALIENPROPORTION, NALIEN,SPAWNPADDING,ALIENPADDING)
 
 gameManager = interract.Game(options, window, canvas, 3, scoreText)
 
 
-buttonStart.configure(command= lambda : gameManager.startLevel(NALIEN,SPAWNPADDING,ALIENPADDING))
+buttonStart.configure(command= gameManager.Restart)
+
+canvas.bind("<<GameStarted>>", lambda event: buttonStart.configure(text="Restart"))   
 
 window.mainloop()
