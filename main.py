@@ -17,79 +17,62 @@ ALIENPADDING = 20
 
 ALIENSPEED = 2
 ALIENSIZE = 15
-ALIENSPEED = 1
-YALIENMOVE = 20
+ALIENYMOVE = 20
+ALIENSHOOTINGCHANCE = 0.01
+SHOOTINGALIENPROPORTION = 0.2
 
 NALIEN = 20
 
 ENTITIESTYPES = ["player","alien","wall","laser"]
 
 #Création de la fenêtre
-si = t.Tk()
+window = t.Tk()
 
-si.title('Space Invaders')
-si["bg"]="grey"
+window.title('Space Invaders')
+window["bg"]="grey"
 largeur, hauteur = 800, 600
 
 
 
-#Separation de la fenetre
-leftFrame = t.Frame(si)
+# Separation de la fenetre
+
+leftFrame = t.Frame(window)  # Moitiée gauche
 leftFrame.grid(row = 0,column=0)
-rightFrame = t.Frame(si)
+rightFrame = t.Frame(window) # Moitiée droite
 rightFrame.grid(row = 0, column=1)
 
-#Widget scoreLabelel de score
+# Widget Label de score
 scoreText = t.StringVar()
-scoreText.set("12")
+scoreText.set("score : 0      vies : 3")
 scoreLabel = t.Label(leftFrame,textvariable = scoreText)
 scoreLabel.grid(row= 0, column=0, padx= 5, pady= 5)
 
 
-#Widget fenetre de jeu
-screen = t.Canvas(leftFrame, width = largeur, height = hauteur, bg = 'black')
-screen.grid(row= 1, column=0, padx= 5, pady= 5)
-screen.focus_set()
+# Widget canvas de jeu
+canvas = t.Canvas(leftFrame, width = largeur, height = hauteur, bg = 'black')
+canvas.grid(row= 1, column=0, padx= 5, pady= 5)
+canvas.focus_set()
 
-#widget bouton start
+# Widget bouton start
 buttonStart = t.Button(rightFrame, text = "Start", fg = "red")
 buttonStart.grid(row=0, column=0, padx= 5, pady= 5)
 
 
-#widget bouton menu
+# Widget bouton menu
 buttonMenu = t.Button(rightFrame, text = "Menu", fg = "red")
 buttonMenu.grid(row=1, column=0, padx= 5, pady= 5)
 
-#widget bouton quitter
-buttonQuit = t.Button(rightFrame, text = "Quitter", fg = "red", command =si.destroy)
+# Widget bouton quitter
+buttonQuit = t.Button(rightFrame, text = "Quitter", fg = "red", command =window.destroy)
 buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 
-entities = interract.entities(si, FRAMERATE, BORDERPADDING, ALIENSPEED, YALIENMOVE, ENTITIESTYPES)
+options = interract.GameOptions(FRAMERATE,BORDERPADDING,ALIENSPEED,ALIENSIZE, ALIENYMOVE,ENTITIESTYPES,
+ ALIENSHOOTINGCHANCE, SHOOTINGALIENPROPORTION)
 
-counter = 0
-xOffset = SPAWNPADDING
-yOffset = 20
-
-while counter < NALIEN:
-    if( xOffset + ALIENPADDING + ALIENSIZE > 800 - SPAWNPADDING):
-        xOffset = SPAWNPADDING
-        yOffset += 20
-    alien1 = interract.alien(screen,[xOffset,yOffset],ALIENSIZE,ALIENSPEED,entities,ENTITIESTYPES[1])
-    xOffset += ALIENPADDING + ALIENSIZE
-    counter += 1
-
-itsMeMario = interract.player(screen,[400,550],20,10,3,entities,scoreText,ENTITIESTYPES[0], 0.3)
-screen.bind('<Right>', itsMeMario.bougeSTP)
-screen.bind('<Left>', itsMeMario.bougeSTP)
-screen.bind('<Key>', itsMeMario.keys)
-screen.bind('<space>', lambda event : itsMeMario.shoot(2,1,15,event))
+gameManager = interract.Game(options, window, canvas, 3, scoreText)
 
 
-entities.moveAliens()
-entities.moveLaser()
-itsMeMario.checkForCollisionWithAliens()
+buttonStart.configure(command= lambda : gameManager.startLevel(NALIEN,SPAWNPADDING,ALIENPADDING))
 
-
-
-si.mainloop()
+window.mainloop()
