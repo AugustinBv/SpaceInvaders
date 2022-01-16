@@ -10,28 +10,27 @@ import time
 # Constantes
 
 FRAMERATE = 75
+CANVAS_SIZE = 800, 600
 
-BORDERPADDING = 5
-SPAWNPADDING = 50
-ALIENPADDING = 20
+BORDER_PADDING = 5
+SPAWN_PADDING = 50
+ALIEN_PADDING = 20
 
-ALIENSPEED = 2
-ALIENSIZE = 15
-ALIENYMOVE = 20
-ALIENSHOOTINGCHANCE = 0.01
-SHOOTINGALIENPROPORTION = 0.2
+ALIEN_SPEED = 2
+ALIEN_SIZE = 15
+ALIEN_Y_MOVE = 10
+ALIEN_SHOOTING_CHANCE = 0.01
+SHOOTING_ALIEN_PROPORTION = 0.2
 
-NALIEN = 20
+N_ALIEN = 20
 
-ENTITIESTYPES = ["player","alien","wall","laser"]
+ENTITIES_TYPES = ["player","alien","wall","laser"]
 
 #Création de la fenêtre
 window = t.Tk()
 
 window.title('Space Invaders')
 window["bg"]="grey"
-largeur, hauteur = 800, 600
-
 
 
 # Separation de la fenetre
@@ -49,7 +48,7 @@ scoreLabel.grid(row= 0, column=0, padx= 5, pady= 5)
 
 
 # Widget canvas de jeu
-canvas = t.Canvas(leftFrame, width = largeur, height = hauteur, bg = 'black')
+canvas = t.Canvas(leftFrame, width = CANVAS_SIZE[0], height = CANVAS_SIZE[1], bg = 'black')
 canvas.grid(row= 1, column=0, padx= 5, pady= 5)
 canvas.focus_set()
 
@@ -67,8 +66,8 @@ buttonQuit = t.Button(rightFrame, text = "Quitter", fg = "red", command =window.
 buttonQuit.grid(row= 2, column=0, padx= 5, pady= 5)
 
 
-options = interract.GameOptions(FRAMERATE,BORDERPADDING,ALIENSPEED,ALIENSIZE, ALIENYMOVE,ENTITIESTYPES,
- ALIENSHOOTINGCHANCE, SHOOTINGALIENPROPORTION, NALIEN,SPAWNPADDING,ALIENPADDING)
+options = interract.GameOptions(FRAMERATE,BORDER_PADDING,ALIEN_SPEED,ALIEN_SIZE, ALIEN_Y_MOVE,ENTITIES_TYPES,
+ ALIEN_SHOOTING_CHANCE, SHOOTING_ALIEN_PROPORTION, N_ALIEN,SPAWN_PADDING,ALIEN_PADDING)
 
 gameManager = interract.Game(options, window, canvas, 3, scoreText)
 

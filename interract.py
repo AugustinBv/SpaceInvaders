@@ -159,7 +159,7 @@ class Level :
         yOffset = 20
 
         while counter < n:
-            if( xOffset + alienPadding + self.options.alienSize > self.master.winfo_width - spawnPadding): # gestion de la position du nouvel alien
+            if( xOffset + alienPadding + self.options.alienSize > self.master.winfo_width() - spawnPadding): # gestion de la position du nouvel alien
                 xOffset = spawnPadding
                 yOffset += 20
             if(randint(1,1000) < 1000 * self.options.shootingAlienProportion): # choix de création d'un type d'alien selon la proportion voulue
