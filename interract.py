@@ -1,3 +1,4 @@
+from email.mime import image
 import tkinter as t
 from random import randint
 
@@ -221,6 +222,8 @@ class instance:
 
         self.type = type
         self.level.addEntity(self,self.type)
+        #alienImg= t.PhotoImage(file = "alien.png")
+        #self.image = self.canvas.create_image(self.position[0],self.position[1], anchor = "nw", image = alienImg)
         
         self.image = self.canvas.create_oval(self.position[0],self.position[1],self.position[0]+ self.size,self.position[1]+self.size, fill='red')
         
@@ -242,7 +245,8 @@ class alien(instance):
 
     def __init__(self, position, size, health, level, type, value):
         super().__init__(position, size, health, level, type)
-        self.canvas.itemconfig(self.image, fill = 'green')
+        
+        #☺self.canvas.itemconfig(self.image, fill = 'green')
         self.value = value
 
     def getPos(self):

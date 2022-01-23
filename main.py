@@ -2,6 +2,7 @@ import tkinter as t
 from tkinter.constants import LEFT, RIGHT
 from random import randint
 from functools import partial
+from tkinter.ttk import Label
 import interract
 import time
 
@@ -49,8 +50,11 @@ scoreLabel.grid(row= 0, column=0, padx= 5, pady= 5)
 
 # Widget canvas de jeu
 canvas = t.Canvas(leftFrame, width = CANVAS_SIZE[0], height = CANVAS_SIZE[1], bg = 'black')
+fond = t.PhotoImage(file = "Space2.png")
+canvas.create_image(0,0,anchor = "nw", image = fond)
 canvas.grid(row= 1, column=0, padx= 5, pady= 5)
 canvas.focus_set()
+
 
 # Widget bouton start
 buttonStart = t.Button(rightFrame, text = "  Start  ", fg = "red")
