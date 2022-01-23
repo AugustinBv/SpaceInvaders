@@ -3,6 +3,7 @@ import tkinter as t
 from random import randint
 
 import time
+from turtle import pos
 
 def checkForCollision(coordsA, coordsB):
     # Fonction qui indique si les rectangles A et B se chevauchent
@@ -25,7 +26,7 @@ class GameOptions :
     # Objet contenant plusieurs informations pour le bon déroulement du jeu
 
     def __init__(self, frameRate, screenBorderPadding, alienSpeed, alienSize, alienDownMove, entitiesTypes, shootingChance,
-     shootingAlienProportion, nAliens, spawnPadding, alienPadding):
+     shootingAlienProportion, nAliens, spawnPadding, alienPadding, nWalls):
 
         self.frameRate = frameRate
         self.frameTime = 1/float(frameRate) * 1000
@@ -40,6 +41,7 @@ class GameOptions :
         self.nAliens = nAliens
         self.spawnPadding = spawnPadding
         self.alienPadding = alienPadding
+        self.nWalls = nWalls
 
 class Game :
 
@@ -101,6 +103,7 @@ class Game :
         self.currentLevel = Level(self) # Initialisation du niveau
 
         self.currentLevel.createAliens(self.options.nAliens, self.options.spawnPadding, self.options.alienPadding) # création des aliens
+        self.currentLevel.createWalls(self.options.nWalls)
         self.currentPlayer = player([400,550],20,10,1,self.currentLevel,self.options.entitiesTypes[0], 0.3) # création du joueur
 
         self.currentLevel.gameLoop() # Lancement des méthodes récursives pour le déplacement des aliens et des lasers 
@@ -156,6 +159,15 @@ class Level :
     def addEntity(self, entity, type):
         # méthode pour ajouter une nouvelle entité dans le niveau
         self.entities[type].append(entity)
+    
+    def createWalls(self, nWalls):
+        counter = 0
+        offset = 50
+        wallPad = 50
+        while counter < nWalls :
+            wall([offset,500], 15, 1, self, self.options.entitiesTypes[2])
+            offset += wallPad + 15
+            counter += 1
     
     def createAliens(self,n, spawnPadding, alienPadding):
         # méthode qui crée n nombre d'aliens des 2 types (ceux qui tirent et ceux qui ne tirent pas)
@@ -246,7 +258,7 @@ class alien(instance):
     def __init__(self, position, size, health, level, type, value):
         super().__init__(position, size, health, level, type)
         
-        #☺self.canvas.itemconfig(self.image, fill = 'green')
+        self.canvas.itemconfig(self.image, fill = 'green')
         self.value = value
 
     def getPos(self):
@@ -290,7 +302,7 @@ class player(instance):
 
     # Objet joueur
 
-    def __init__(self, position, size, speed, health,level, type, shootDelay):
+    def __init__(self, position, size, speed, health, level, type, shootDelay):
         super().__init__(position, size, health,level, type)
 
         self.speed = speed
@@ -343,6 +355,11 @@ class player(instance):
             self.level.master.after(int(self.level.options.frameTime), self.checkForCollisionWithAliens)
             
 
+class wall(instance):
+
+    def __init__(self, position, size, health, level, type):
+        super().__init__(position, size, health, level, type)
+        self.image = self.canvas.create_rectangle(self.position[0],self.position[1],self.position[0]+ self.size,self.position[1]+self.size, fill='blue')
 
 
 class laser(instance):
