@@ -114,7 +114,7 @@ class Game :
 
         if(self.currentLevel != None): # si ce n'est pas la première fois que l'on lance un niveau
             self.currentLevel.gameOver = True
-            self.currentLevel.clearLevel() # on supprime le niveau actuel
+            self.currentLevel.clearLevel() # on supprime les entités du niveau actuel
         
         if(self.lost): # si on vient de mourrir
             self.lives -=1 #on enlève une vie
@@ -126,6 +126,9 @@ class Game :
 
         if(not self.lives <=0): # si il nous reste des vies
             self.startLevel() 
+
+        fond = t.PhotoImage(file = "Space2.png")
+        self.canvas.create_image(0,0,anchor = "nw", image = fond)
             
     
 
@@ -202,6 +205,10 @@ class Level :
     def moveAliens(self):
         # méthode qui déplacent les aliens
         if(not self.gameOver):
+
+            if(randint(1,1000) < 1):
+                bonusAlien([-100,self.entities["alien"][1].getPos()[1] - 50], self.options.alienSize, 1, self, self.options.entitiesTypes[1],150)
+
             for alien in self.entities["alien"]: # On vérifie si un des aliens touche le bord
                 alien.checkForBorders()
             for alien in self.entities["alien"]:
@@ -215,7 +222,8 @@ class Level :
     def clearLevel(self):
         # méthode qui retire toutes les entités
         self.canvas.delete('all') # on retire toutes les images du canvas
-        self.entities.clear() # on vide le dictionnaire des entités<
+        self.entities.clear() # on vide le dictionnaire des entités
+        
             
             
 
@@ -223,7 +231,7 @@ class instance:
 
     # Objet dont hérite chaque élément qui peut intéragir avec les autres (joueur, aliens, etc)
 
-    def __init__(self, position, size, health, level, type):
+    def __init__(self, position, size, health, level, type, image):
         self.position = position
         self.size = size
         self.health = health
@@ -234,10 +242,14 @@ class instance:
 
         self.type = type
         self.level.addEntity(self,self.type)
-        #alienImg= t.PhotoImage(file = "alien.png")
-        #self.image = self.canvas.create_image(self.position[0],self.position[1], anchor = "nw", image = alienImg)
         
-        self.image = self.canvas.create_oval(self.position[0],self.position[1],self.position[0]+ self.size,self.position[1]+self.size, fill='red')
+        self.image = image
+
+        if(self.image == None):
+            self.image = self.canvas.create_oval(self.position[0],self.position[1],self.position[0]+ self.size,self.position[1]+self.size, fill='red')
+        else:
+            self.image = self.canvas.create_image(self.position[0],self.position[1], anchor = "nw", image = self.image)
+
         
     def removeHP(self, value):
         # Méthode qui permet de retirer des points de vie et gérer la "mort" de l'objet
@@ -255,15 +267,15 @@ class alien(instance):
     
     # Objet de base pour les ennemis
 
-    def __init__(self, position, size, health, level, type, value):
-        super().__init__(position, size, health, level, type)
+    def __init__(self, position, size, health, level, type, value,image = None):
+        super().__init__(position, size, health, level, type, image)
         
         self.canvas.itemconfig(self.image, fill = 'green')
         self.value = value
 
     def getPos(self):
         # Méthode qui retourne la position de l'objet
-        return self.canvas.coords(self.image)[:1]
+        return self.canvas.coords(self.image)[:2]
 
     def move(self):
         # Méthode qui permet de déplacer l'objet
@@ -286,8 +298,8 @@ class shootingAlien(alien):
 
     # Objet ennemi qui peut tirer, hérite d'alien
 
-    def __init__(self, position, size, health, level, type, value):
-        super().__init__(position, size, health, level, type, value)  
+    def __init__(self, position, size, health, level, type, value,image = None):
+        super().__init__(position, size, health, level, type, value,image)  
         self.canvas.itemconfig(self.image, fill = 'yellow')
 
     def move(self):
@@ -296,14 +308,33 @@ class shootingAlien(alien):
         if randint(1,1000) < self.level.options.shootingChance * 1000 :
             tir = laser(self.position, 1, self.level, "laser", 10, 5, 1)    
 
+class bonusAlien(alien):
+
+    def __init__(self, position, size, health, level, type, value, image=None):
+        super().__init__(position, size, health, level, type, value, image)
+        self.canvas.itemconfig(self.image, fill = 'purple')
+    
+    def move(self):
+        # Méthode qui permet de déplacer l'objet
+        self.canvas.move(self.image,self.level.alienSpeed * self.level.alienSpeed,0)
+        self.position = self.canvas.coords(self.image)
+
+    def moveDown(self):
+        return None
+
+    def checkForBorders(self):
+        # Méthode utilisée pour vérifier les collisions avec les bords
+        if self.getPos()[0] > self.canvas.winfo_width() +200:
+            self.canvas.delete(self.image)
+            self.level.entities[self.type].remove(self)
 
 
 class player(instance):
 
     # Objet joueur
 
-    def __init__(self, position, size, speed, health, level, type, shootDelay):
-        super().__init__(position, size, health,level, type)
+    def __init__(self, position, size, speed, health,level, type, shootDelay,image = None):
+        super().__init__(position, size, health,level, type,image)
 
         self.speed = speed
         self.attackSpeed = 30
@@ -350,8 +381,9 @@ class player(instance):
         # Méthode qui vérifie la collision avec les ennemis et fait perdre le joueur
         if(not self.level.gameOver):
             for alien in self.level.entities["alien"]:
-                if(checkForCollision(self.canvas.coords(self.image),self.canvas.coords(alien.image))):
-                    self.removeHP(1)
+                if type(alien) != bonusAlien :
+                    if(checkForCollision(self.canvas.coords(self.image),self.canvas.coords(alien.image))):
+                        self.removeHP(1)
             self.level.master.after(int(self.level.options.frameTime), self.checkForCollisionWithAliens)
             
 
@@ -366,8 +398,8 @@ class laser(instance):
 
     # Objet laser tiré par le joueur ou les aliens
 
-    def __init__(self, position, direction, level, type, size = 5, speed = 10, health = 1) :
-        super().__init__(position, size, health, level,type)
+    def __init__(self, position, direction, level, type, size, speed, health, image = None) :
+        super().__init__(position, size, health, level,type,image)
         self.speed = speed
         self.direction = direction
         self.canvas.itemconfig(self.image, fill = 'yellow')
