@@ -42,7 +42,7 @@ class GameOptions :
 
 class Game :
 
-    # Objet mâitre qui contient tous les autres objets et qui contient les méthodes principales du jeu, il gère le déroulement de la partie
+    # Objet maître qui contient tous les autres objets et qui contient les méthodes principales du jeu, il gère le déroulement de la partie
 
     def __init__(self,options, master, canvas, lives, text):
 
@@ -85,6 +85,7 @@ class Game :
             self.scoreUp(1000)
         elif lstcode == ["v","i","v","e","l","a","v","i"] :
             self.lives += 3
+            self.updateLabel()
         elif lstcode == ["v","a","c","h","i","e","r","m"] :
             while self.currentLevel.entities["alien"] != []:
                 self.currentLevel.entities["alien"][0].removeHP(1000)
