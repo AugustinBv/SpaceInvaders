@@ -42,7 +42,7 @@ class GameOptions :
 
 class Game :
 
-    # Objet maître qui contient tous les autres objets et qui contient les méthodes principales du jeu, il gère le déroulement de la partie
+    # Objet maitre qui contient tous les autres objets et qui contient les méthodes principales du jeu, il gère le déroulement de la partie
 
     def __init__(self,options, master, canvas, lives, text):
 
@@ -171,31 +171,35 @@ class Level :
             counter += 1
 
     def changeAlienDir(self):
+        # méthode qui permet de changer la direction de déplacement des aliens (gauche /droite) et vérifie si ils ont fait un aller-retour
         self.alienSpeed *= -1
-        if(self.alienSpeed > 0):
-            self.alienDown = True
+        if(self.alienSpeed > 0): # si les aliens se déplacent de nouveau vers la droite, c'est qu'ils on fait un aller retour
+            self.alienDown = True # On envoi donc le signal pour qu'ils descendent d'une ligne
     
     def moveLaser(self):
+        # méthode qui déplacent les lasers 
         if(not self.gameOver):
             for laser in self.entities["laser"]:
                 laser.laserShot()
-            self.master.after(int(self.options.frameTime), self.moveLaser)
+            self.master.after(int(self.options.frameTime), self.moveLaser) # on rappelle la frame après le temps d'une frame
     
     def moveAliens(self):
+        # méthode qui déplacent les aliens
         if(not self.gameOver):
-            for alien in self.entities["alien"]: 
+            for alien in self.entities["alien"]: # On vérifie si un des aliens touche le bord
                 alien.checkForBorders()
             for alien in self.entities["alien"]:
-                if(self.alienDown):
-                    alien.moveDown()
-                alien.move()
-            self.alienDown = False
+                if(self.alienDown): 
+                    alien.moveDown() # on fait descendre chaque alien si le signal est actif
+                alien.move() # on déplace chaque alien
+            self.alienDown = False # on désactive le signal
         
-            self.master.after(int(self.options.frameTime), self.moveAliens)
+            self.master.after(int(self.options.frameTime), self.moveAliens) # on rappelle la frame après le temps d'une frame
 
     def clearLevel(self):
-        self.canvas.delete('all')
-        self.entities.clear()
+        # méthode qui retire toutes les entités
+        self.canvas.delete('all') # on retire toutes les images du canvas
+        self.entities.clear() # on vide le dictionnaire des entités<
             
             
 
